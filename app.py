@@ -38,7 +38,7 @@ st.markdown("""
     color: white;
 }
 .big-title {
-    font-size: 40px;
+    font-size: 37px;
     font-weight: 700;
     font-family: "Quicksand", sans-serif;
 }
