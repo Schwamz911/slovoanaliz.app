@@ -212,7 +212,7 @@ st.sidebar.title("История")
 for i, item in enumerate(st.session_state.history[-5:]):
     st.sidebar.write(f"Анализ {i+1}")
 
-if st.button("🧑 Сделать текст более человеческим"):
+if st.button("Сделать текст более человеческим"):
     if text.strip():
 
         with st.spinner("Очеловечиваем текст..."):
