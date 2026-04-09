@@ -218,7 +218,7 @@ if st.button("Сделать текст более человеческим"):
         with st.spinner("Очеловечиваем текст..."):
 
             response = client.chat.completions.create(
-                model="meta-llama/llama-3.1-70b-instruct",  # новая модель
+                model="google/gemini-2.0-flash-lite-001",  # новая модель
                 messages=[
                     {
                         "role": "system",
