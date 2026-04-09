@@ -217,7 +217,7 @@ if st.button("🧑 Сделать текст более человеческим
 
         with st.spinner("Очеловечиваем текст..."):
 
-            # 🔍 ШАГ 1 — анализ текста
+            # анализ текста
             analysis_response = client.chat.completions.create(
                 model="openai/gpt-4o-mini",
                 messages=[
@@ -246,7 +246,7 @@ if st.button("🧑 Сделать текст более человеческим
 
             analysis = analysis_response.choices[0].message.content
 
-            # ✍️ ШАГ 2 — humanizer
+            # humanizer
             human_response = client.chat.completions.create(
                 model="openai/gpt-4o-mini",
                 messages=[
@@ -280,7 +280,7 @@ if st.button("🧑 Сделать текст более человеческим
 
             humanized = human_response.choices[0].message.content
 
-            st.subheader("🧑 Humanized текст")
+            st.subheader("Humanized текст")
 
             col1, col2 = st.columns(2)
 
