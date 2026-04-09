@@ -217,78 +217,39 @@ if st.button("Сделать текст более человеческим"):
 
         with st.spinner("Очеловечиваем текст..."):
 
-            #  упрощение
-            step1 = client.chat.completions.create(
-                model="openai/gpt-4o-mini",
+            response = client.chat.completions.create(
+                model="deepseek/deepseek-chat",  #только тут DeepSeek
                 messages=[
                     {
                         "role": "system",
-                        "content": "Упрощай текст, делай его менее формальным."
+                        "content": "Ты эксперт по переписыванию текста в естественный человеческий стиль."
                     },
                     {
                         "role": "user",
                         "content": f"""
-Сделай текст проще и менее формальным.
-Убери сложные конструкции.
+Перепиши текст так, чтобы он звучал максимально естественно.
 
-Текст:
+ТРЕБОВАНИЯ:
+- вариативные предложения
+- избегай шаблонности
+- добавь немного разговорности
+- сделай текст менее идеальным
+- убери "AI стиль"
+
+ВАЖНО:
+- сохрани смысл
+- не сокращай сильно
+- добавь небольшие несовершенства как у человека
+
+ТЕКСТ:
 {text}
 """
                     }
                 ],
-                temperature=0.7
-            ).choices[0].message.content
-
-            # добавление человечности
-            step2 = client.chat.completions.create(
-                model="openai/gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "Ты превращаешь текст в естественную человеческую речь."
-                    },
-                    {
-                        "role": "user",
-                        "content": f"""
-Сделай текст более человеческим:
-
-- добавь вариативность предложений
-- иногда используй более разговорный стиль
-- избегай шаблонности
-- сделай текст менее идеальным
-
-Текст:
-{step1}
-"""
-                    }
-                ],
                 temperature=1.0
-            ).choices[0].message.content
+            )
 
-            # 🔹 ШАГ 3 — финальная полировка
-            final = client.chat.completions.create(
-                model="openai/gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "Ты редактор, который делает текст живым и естественным."
-                    },
-                    {
-                        "role": "user",
-                        "content": f"""
-Отредактируй текст так, чтобы он звучал максимально естественно.
-
-- избегай повторов
-- сделай плавность
-- оставь смысл
-
-Текст:
-{step2}
-"""
-                    }
-                ],
-                temperature=0.9
-            ).choices[0].message.content
+            humanized = response.choices[0].message.content
 
             st.subheader("Humanized текст")
 
@@ -300,4 +261,4 @@ if st.button("Сделать текст более человеческим"):
 
             with col2:
                 st.write("Humanized")
-                st.write(final)
+                st.write(humanized)
