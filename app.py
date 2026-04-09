@@ -212,12 +212,12 @@ st.sidebar.title("История")
 for i, item in enumerate(st.session_state.history[-5:]):
     st.sidebar.write(f"Анализ {i+1}")
 
-if st.button("🧑 Сделать текст более человеческим"):
+if st.button("Сделать текст более человеческим"):
     if text.strip():
 
         with st.spinner("Очеловечиваем текст..."):
 
-            # 🔹 ШАГ 1 — упрощение (убираем "роботский стиль")
+            #  упрощение
             step1 = client.chat.completions.create(
                 model="openai/gpt-4o-mini",
                 messages=[
@@ -239,7 +239,7 @@ if st.button("🧑 Сделать текст более человеческим
                 temperature=0.7
             ).choices[0].message.content
 
-            # 🔹 ШАГ 2 — добавление человечности
+            # добавление человечности
             step2 = client.chat.completions.create(
                 model="openai/gpt-4o-mini",
                 messages=[
@@ -290,7 +290,7 @@ if st.button("🧑 Сделать текст более человеческим
                 temperature=0.9
             ).choices[0].message.content
 
-            st.subheader("🧑 Humanized текст")
+            st.subheader("Humanized текст")
 
             col1, col2 = st.columns(2)
 
