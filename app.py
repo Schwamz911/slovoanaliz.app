@@ -212,10 +212,82 @@ st.sidebar.title("История")
 for i, item in enumerate(st.session_state.history[-5:]):
     st.sidebar.write(f"Анализ {i+1}")
 
-if st.button("Сделать текст более человеческим"):
+if st.button("🧑 Сделать текст более человеческим"):
     if text.strip():
-        human_prompt = f"Перепиши текст так, чтобы он звучал максимально естественно, убери шаблонность:\n{text}"
+
         with st.spinner("Очеловечиваем текст..."):
-            humanized = ask_ai(human_prompt)
-            st.subheader("Очеловеченный текст:")
-            st.write(humanized)
+
+            # 🔍 ШАГ 1 — анализ текста
+            analysis_response = client.chat.completions.create(
+                model="openai/gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "Ты анализируешь текст и находишь признаки AI."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"""
+Найди признаки AI в тексте:
+- шаблонность
+- повторяемость
+- слишком идеальная структура
+- отсутствие естественности
+
+Ответь кратким списком.
+
+Текст:
+{text}
+"""
+                    }
+                ],
+                temperature=0.3
+            )
+
+            analysis = analysis_response.choices[0].message.content
+
+            # ✍️ ШАГ 2 — humanizer
+            human_response = client.chat.completions.create(
+                model="openai/gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "Ты переписываешь текст так, чтобы он звучал максимально естественно и по-человечески."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"""
+Перепиши текст как человек.
+
+ТРЕБОВАНИЯ:
+- разная длина предложений
+- избегай шаблонных фраз
+- добавь естественность
+- можно немного разговорного стиля
+- не делай текст идеальным
+- не используй сложные конструкции без необходимости
+
+УЧТИ АНАЛИЗ:
+{analysis}
+
+ТЕКСТ:
+{text}
+"""
+                    }
+                ],
+                temperature=0.9
+            )
+
+            humanized = human_response.choices[0].message.content
+
+            st.subheader("🧑 Humanized текст")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.write("Оригинал")
+                st.write(text)
+
+            with col2:
+                st.write("Humanized")
+                st.write(humanized)
